@@ -1,0 +1,29 @@
+string(TOLOWER ${CMAKE_HOST_SYSTEM_NAME} PLATFORM)
+set(MY_BIN_PATH ${PROJECT_SOURCE_DIR}/bin/${PLATFORM})
+# CMAKE_BUILD_WITH_INSTALL_RPATH TRUE 编译时使用RPATH
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+set(CMAKE_INSTALL_RPATH ./${PLATFORM})
+
+# cmake 宏基本定义
+macro(REDIRECT_OUTPUT TARGET DIR)
+    set_target_properties(
+        ${TARGET}
+        PROPERTIES
+        PREFIX ""
+        LIBRARY_OUTPUT_DIRECTORY ${DIR}
+        RUNTIME_OUTPUT_DIRECTORY ${DIR}
+        LIBRARY_OUTPUT_DIRECTORY_DEBUG ${DIR} # debug 输出路径
+        RUNTIME_OUTPUT_DIRECTORY_DEBUG ${DIR} # 运行程序使用
+        LIBRARY_OUTPUT_DIRECTORY_MINSIZEREL ${DIR}
+        RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${DIR}
+        LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO ${DIR}
+        RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${DIR}
+        LIBRARY_OUTPUT_DIRECTORY_RELEASE ${DIR} # release 输出路径
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE ${DIR})
+endmacro()
+
+#将指定目录添加到编译器的头文件搜索路径之下，指定的目录被解释成当前源码路径的相对路径。
+include_directories(plus) #默认将plus添加到列表最后
+
+# 添加一个编译的子路径,在子路径中查找CMakeLists.txt文件,并进行编译
+add_subdirectory(plus)
